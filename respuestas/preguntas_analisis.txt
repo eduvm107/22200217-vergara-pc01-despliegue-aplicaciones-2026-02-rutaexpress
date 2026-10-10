@@ -1,113 +1,60 @@
 PRÁCTICA CALIFICADA 01 - DESPLIEGUE DE APLICACIONES
 Caso RutaExpress - Preguntas de análisis
-
-Las evidencias citadas están en la carpeta evidencias/ (salidas/, cliente/, nginx/ y bd/).
-
-
-1. TIMEOUT Y RECUPERACIÓN
--------------------------
-En la prueba 03 el primer intento llegó a app2 a las 11:36:29.837 y el envío id 1 quedó
-REGISTRADO en PostgreSQL a las 11:36:29.856, es decir, a los 19 ms. El cliente estaba
-configurado para esperar 2 segundos y, como la respuesta se demoró 5 segundos, dejó de esperar:
-su registro dice TIMEOUT_CLIENTE y Nginx anotó un 499 (cliente cerró la conexión) a los 1.960 s.
-Para el trabajador la operación "falló", pero en realidad el envío ya existía.
-
-Al reintentar con la misma Idempotency-Key, la solicitud la atendió otra réplica (app3) y
-respondió 200 con Idempotent-Replayed: true y el mismo id 1. En la tabla envios quedó un solo
-registro para esa clave. Mi solución evita que el reintento genere un segundo envío. Si se
-hubiera creado, RutaExpress programaría dos recojos (un motorizado va a un lugar donde ya no
-hay nada que recoger) y podría cobrarle dos veces al cliente. Eso significa costos operativos,
-devoluciones y reclamos, y el cliente pierde la confianza porque el sistema "le cobró de más".
-El trabajador, además, puede reintentar sin miedo, porque reintentar siempre es seguro.
-
-Una alternativa es la que usan las pasarelas de pago: cuando no reciben respuesta de la red de
-tarjetas, envían un reverso para anular la operación. Aquí no conviene, porque el envío sí se
-registró correctamente; lo correcto es recuperar ese mismo envío, no anularlo.
+Alumno: Eduardo Vergara - Código: 22200217
 
 
-2. CONCURRENCIA Y RÉPLICAS
---------------------------
-En la prueba 04 envié dos solicitudes con la misma Idempotency-Key al mismo tiempo. Llegaron a
-app2 (11:36:40.576) y a app1 (11:36:40.577), con un milisegundo de diferencia. app2 respondió
-201 y creó el envío id 2; app1 respondió 200 (REPETIDO) con el mismo id 2. En la base quedó un
-solo envío.
-
-Si ambas hubieran creado un envío, RutaExpress tendría dos órdenes para el mismo paquete: doble
-recojo, doble cobro y dos números de seguimiento que confunden al cliente y al almacén. Se
-justifica controlarlo aunque haya varias instancias justamente porque cada réplica tiene su propia
-memoria y no sabe lo que hace la otra; si app1 y app2 preguntan "¿ya existe?" al mismo tiempo,
-las dos reciben "no". Por eso el control está en PostgreSQL, que es compartido: la restricción
-UNIQUE sobre idempotency_key hace que solo una inserción gane y la otra espere y devuelva el envío
-ya creado. Cuantas más réplicas hay, más probable es que dos intentos coincidan.
+1. Timeout y recuperación
+En mi prueba el primer intento llegó a app2 y el envío 1 se guardó en la base en menos de 20 ms,
+pero la respuesta tardaba 5 segundos y el cliente solo esperaba 2, así que se quedó sin respuesta
+(en Nginx quedó como 499). Cuando reintenté con la misma Idempotency-Key, me atendió app3 y me
+devolvió el mismo envío 1 con código 200, sin crear otro. Esto evita que se programen dos recojos
+o se haga un doble cobro por el mismo paquete. Además el trabajador puede volver a intentar sin
+miedo, y el cliente no pierde la confianza por cobros repetidos.
+Evidencia: evidencias/salidas/03-timeout-reintento y la captura 04 de DBeaver.
 
 
-3. ENTREGA Y CONFIGURACIÓN
---------------------------
-La aplicación está publicada como imagen versionada (eduardo30458/envios-app:1.0.0) en Docker
-Hub, y la descargué con docker pull para comprobar que está disponible. Otra oficina no tiene
-que instalar Node.js, dependencias ni PostgreSQL: copia el repositorio, crea su .env a partir de
-.env.example con sus credenciales y ejecuta "docker compose up -d". El docker-compose.yml ya
-define las tres réplicas, la base, Nginx, los puertos y los volúmenes, y el script SQL crea las
-tablas automáticamente la primera vez.
-
-Esto reduce problemas típicos: versiones distintas de Node o de librerías entre equipos (la
-imagen usa npm ci con el package-lock, así que todos ejecutan exactamente lo mismo), pasos
-manuales olvidados al crear tablas, y diferencias de sistema operativo, porque todo corre en
-contenedores Linux. Las credenciales no viajan dentro de la imagen ni en el repositorio: cada
-oficina usa las suyas por variables de entorno. La aplicación además corre con un usuario sin
-privilegios (app, uid 100), lo que limita el daño si alguien la comprometiera.
+2. Concurrencia y réplicas
+Mandé dos solicitudes iguales al mismo tiempo y llegaron a app2 y app1 con 1 ms de diferencia.
+app2 creó el envío 2 (201) y app1 respondió que ya existía (200). En la base quedó un solo envío.
+Si las dos hubieran creado un envío, RutaExpress tendría el mismo paquete duplicado, con dos
+recojos y dos cobros. Hay que controlarlo porque cada réplica no sabe lo que hace la otra; por eso
+el control lo hace PostgreSQL con la restricción UNIQUE, que es la misma base para las tres.
+Evidencia: evidencias/salidas/04-concurrencia.
 
 
-4. PERSISTENCIA Y RECUPERACIÓN
-------------------------------
-En la prueba 06 registré tres envíos (ids 5, 6 y 7: María Quispe, Jorge Salazar y Rosa Huamán).
-Luego ejecuté docker compose down y docker compose up: los cinco contenedores tenían IDs nuevos,
-pero los tres envíos seguían con los mismos ids, datos y fecha de creación, porque PostgreSQL
-guarda sus datos en el volumen db_data, que no se borra al recrear contenedores. Después
-reintenté la operación del envío 5 y el sistema respondió 200 con el mismo id 5, sin crear otro.
-
-Esto protege los envíos ya registrados y también la memoria de qué operaciones ya se hicieron.
-Si se perdiera la información, RutaExpress perdería pedidos que los clientes ya pagaron, no
-podría hacer el seguimiento ni responder reclamos, y además un reintento posterior se tomaría
-como un envío nuevo, porque ya no existiría la clave que lo identifica: volveríamos al problema
-de los recojos y cobros duplicados. Lo mismo pasa con el registro de intentos y con el log de
-rechazos de Nginx, que también se conservaron al recrear los contenedores.
+3. Entrega y configuración
+Publiqué la imagen eduardo30458/envios-app:1.0.0 en Docker Hub y comprobé que se descarga con
+docker pull. Otra oficina solo necesita Docker: copia el repositorio, crea su .env a partir de
+.env.example y ejecuta docker compose up -d. No tiene que instalar Node, librerías ni crear las
+tablas a mano, porque el script SQL se ejecuta solo. Así se evitan problemas como versiones
+distintas entre equipos o pasos olvidados, y las contraseñas no van dentro de la imagen.
+Evidencia: evidencias/dockerhub/push-pull.txt.
 
 
-5. CONTINUIDAD DEL SERVICIO
----------------------------
-En la prueba 02 el cliente consultó /health cada 400 ms mientras detenía app2. Con app2 detenida
-se hicieron 14 solicitudes y las 14 respondieron 200 (7 app1 y 7 app3), con 0 errores para el
-cliente. Al reiniciar app2, volvió a recibir solicitudes. Para una oficina que registra envíos
-durante la jornada, esto significa que una falla o un mantenimiento de una réplica no detiene la
-atención: los trabajadores siguen registrando sin enterarse.
-
-Sin embargo, no fue totalmente transparente. En logs/nginx/error.log quedó registrado que Nginx
-intentó conectarse a app2 ya detenida ("upstream timed out while connecting"), esperó y reenvió
-la solicitud a app3; esa solicitud tardó 2.0 s en vez de unos milisegundos. Además, tres réplicas
-no garantizan que el servicio nunca se interrumpa: todas dependen de una única base de datos y
-de un único Nginx, que siguen siendo puntos únicos de falla; si las tres réplicas tienen el mismo
-error de código, fallan juntas; y si todo corre en un solo equipo, un corte de luz o de red tumba
-todo. Por último, Nginx no reintenta un POST en otra réplica, así que un registro en curso en la
-réplica que se cae puede fallar y el trabajador tendría que reintentarlo (lo cual es seguro
-gracias a la Idempotency-Key).
+4. Persistencia y recuperación
+Registré los envíos 5, 6 y 7, hice docker compose down y luego up, y los contenedores eran nuevos
+pero los envíos seguían con los mismos ids y datos, porque la base guarda todo en un volumen.
+Después reintenté la operación del envío 5 y me devolvió el mismo envío, sin duplicarlo. Esto
+protege los pedidos ya registrados. Si se perdiera esa información, la empresa perdería envíos
+ya pagados y un reintento se tomaría como un envío nuevo, volviendo a generar duplicados.
+Evidencia: evidencias/salidas/06-persistencia y las capturas 03 y 05.
 
 
-6. RECHAZOS POR EXCESO DE SOLICITUDES
--------------------------------------
-En la prueba 07 envié 20 POST /envios simultáneos desde la misma IP en 177 ms (unas 113
-solicitudes por segundo). Nginx admitió 5 de inmediato (1 + la ráfaga de 4) y rechazó 15 con
-HTTP 429; esas 15 no llegaron a ninguna réplica (no tienen X-Instance-ID). Luego, a una
-solicitud por segundo, las 5 fueron aceptadas con 201. Este control se justifica porque una
-oficina con un script mal configurado, un botón presionado muchas veces o un ataque podría
-saturar las réplicas y la base y dejar sin servicio a las demás oficinas. Es preferible rechazar
-rápido el exceso de un cliente que dejar a todos sin atención.
+5. Continuidad del servicio
+Mientras consultaba /health detuve app2, y las 14 solicitudes de ese momento las atendieron app1
+y app3 sin errores. Cuando volví a levantar app2, empezó a recibir solicitudes otra vez. Para una
+oficina esto significa que puede seguir registrando envíos aunque una réplica falle. Pero tener
+tres réplicas no garantiza que nunca se caiga: hay una sola base de datos y un solo Nginx, y si
+alguno falla se detiene todo. Además, en mi prueba una solicitud tardó 2 segundos porque Nginx
+primero intentó con app2, que estaba apagada.
+Evidencia: evidencias/salidas/02-continuidad y evidencias/nginx/error.log.
 
-Si un trabajador reclama que su solicitud fue rechazada, el archivo logs/nginx/rechazos_429.jsonl
-permite verificarlo: cada línea tiene la fecha y hora (con milisegundos en msec), la IP, el método,
-la ruta, el código 429, el estado del limitador (REJECTED), el request_id y la Idempotency-Key.
-Con la IP y la hora del reclamo encuentro su rechazo; por ejemplo, la prueba dejó 15 rechazos
-de la IP 172.19.0.1 a las 11:37 del 10/10/2026. Con la Idempotency-Key compruebo si después
-reintentó y si ese envío se creó (consultando la tabla envios), así que puedo decirle con certeza
-si su envío existe o si debe registrarlo de nuevo. El registro no guarda el cuerpo ni datos
-personales, y siguió disponible después de recrear el contenedor de Nginx (prueba 08).
+
+6. Rechazos por exceso de solicitudes
+Mandé 20 solicitudes al mismo tiempo: Nginx aceptó 5 y rechazó 15 con HTTP 429, sin que llegaran a
+la aplicación. Después, enviando una por segundo, todas fueron aceptadas. Este control evita que
+una sola oficina sature el sistema y deje sin servicio a las demás. Si un trabajador reclama, puedo
+buscar en logs/nginx/rechazos_429.jsonl por su IP y la hora: ahí aparecen la fecha, la IP, el
+método, la ruta y el código 429. Con la Idempotency-Key también puedo ver si luego reintentó y si su
+envío se creó. Estos registros no guardan datos personales y se mantuvieron al recrear Nginx.
+Evidencia: evidencias/salidas/07-rafaga-429, 08-registro-429 y evidencias/nginx/rechazos_429.jsonl.
