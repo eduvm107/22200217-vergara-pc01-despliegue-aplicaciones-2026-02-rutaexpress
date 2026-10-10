@@ -1,0 +1,60 @@
+Evidencia del cliente: evidencias\cliente\08-registro-429_2026-10-10T16-37-23-692Z.jsonl
+Salida de la prueba:   evidencias\salidas\08-registro-429_2026-10-10T16-37-23-692Z.txt
+
+# Prueba 08 - Consulta y persistencia del registro de rechazos 429
+
+Archivo: logs\nginx\rechazos_429.jsonl  ->  15 rechazos registrados
+Últimos 5 rechazos:
+  2026-10-10T11:37:12-05:00  ip=172.19.0.1  POST /envios  HTTP 429  limite=REJECTED  upstream=""  request_id=b9893112b5b41188abed136e75c5e5b2
+  2026-10-10T11:37:12-05:00  ip=172.19.0.1  POST /envios  HTTP 429  limite=REJECTED  upstream=""  request_id=b8d3d4b337281584a236abf8d72133b7
+  2026-10-10T11:37:12-05:00  ip=172.19.0.1  POST /envios  HTTP 429  limite=REJECTED  upstream=""  request_id=35c940968340ff44033f015d2b786600
+  2026-10-10T11:37:12-05:00  ip=172.19.0.1  POST /envios  HTTP 429  limite=REJECTED  upstream=""  request_id=6e04173440234e88e2af9136bab0b62c
+  2026-10-10T11:37:12-05:00  ip=172.19.0.1  POST /envios  HTTP 429  limite=REJECTED  upstream=""  request_id=f9b6e1f1b541c5d524c8d83b75d2c4ee
+
+Rechazos por IP: {
+  "172.19.0.1": 15
+}
+Rechazos por minuto: {
+  "2026-10-10T11:37": 15
+}
+
+>>> 2026-10-10 11:37:23.913-05:00  docker compose up -d --force-recreate nginx
+Container envios-app-db-1  Running
+ Container envios-app-app3-1  Running
+ Container envios-app-app1-1  Running
+ Container envios-app-app2-1  Running
+ Container envios-app-nginx-1  Recreate
+ Container envios-app-nginx-1  Recreated
+ Container envios-app-db-1  Waiting
+ Container envios-app-db-1  Waiting
+ Container envios-app-db-1  Waiting
+ Container envios-app-db-1  Healthy
+ Container envios-app-db-1  Healthy
+ Container envios-app-db-1  Healthy
+ Container envios-app-app1-1  Waiting
+ Container envios-app-app2-1  Waiting
+ Container envios-app-app3-1  Waiting
+ Container envios-app-app3-1  Healthy
+ Container envios-app-app2-1  Healthy
+ Container envios-app-app1-1  Healthy
+ Container envios-app-nginx-1  Starting
+ Container envios-app-nginx-1  Started
+ Container envios-app-nginx-1  Waiting
+ Container envios-app-app1-1  Waiting
+ Container envios-app-app2-1  Waiting
+ Container envios-app-app3-1  Waiting
+ Container envios-app-db-1  Waiting
+ Container envios-app-app3-1  Healthy
+ Container envios-app-db-1  Healthy
+ Container envios-app-app1-1  Healthy
+ Container envios-app-app2-1  Healthy
+ Container envios-app-nginx-1  Healthy
+Contenedor nginx antes:   657a6e46a8498892f27b9e3353f283758bdc2a6225f0e618e430dea5871a06ef
+Contenedor nginx después: 7e8f73df038c025a2407d903c1596bbc74666da0083623fd116833220d7f262f
+
+Después de recrear nginx: 15 rechazos registrados
+✔ CUMPLE: existen rechazos 429 registrados (ejecute antes la prueba 07)
+✔ CUMPLE: cada registro tiene fecha y hora, IP, método, ruta y código HTTP
+✔ CUMPLE: el contenedor nginx fue recreado
+✔ CUMPLE: los rechazos registrados antes siguen presentes después de recrear nginx
+✔ CUMPLE: el registro no contiene cuerpo, datos personales ni credenciales

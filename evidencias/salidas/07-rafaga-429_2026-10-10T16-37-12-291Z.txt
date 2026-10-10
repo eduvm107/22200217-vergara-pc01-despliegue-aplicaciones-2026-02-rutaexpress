@@ -1,0 +1,57 @@
+Evidencia del cliente: evidencias\cliente\07-rafaga-429_2026-10-10T16-37-12-291Z.jsonl
+Salida de la prueba:   evidencias\salidas\07-rafaga-429_2026-10-10T16-37-12-291Z.txt
+
+# Prueba 07 - Ráfaga sobre POST /envios (límite 2 r/s por IP, burst 4, nodelay)
+
+## Fase 1: 20 solicitudes simultáneas (cada una es un envío distinto)
+Inicio: 2026-10-10 11:37:12.296-05:00
+Fin:    2026-10-10 11:37:12.474-05:00
+Resumen de la ráfaga: {
+  "solicitudes": 20,
+  "duracion_ms": 177.5,
+  "tasa_aprox_rps": 112.7,
+  "codigos_http": {
+    "201": 5,
+    "429": 15
+  },
+  "admitidas_atendidas_por": {
+    "app1": 2,
+    "app2": 2,
+    "app3": 1
+  },
+  "duracion_max_admitidas_ms": 170.8
+}
+  rafaga-1  HTTP 201   170.8 ms  réplica=app1  request_id=fcee9cbccec30f037329a7ffb7d7592f
+  rafaga-2  HTTP 201   150.1 ms  réplica=app2  request_id=5aa6fa8d6e64c2d77c5f284bfadb7fdf
+  rafaga-3  HTTP 201   147.6 ms  réplica=app1  request_id=245716d31575e2d4146f879bb8de4ad6
+  rafaga-4  HTTP 201   103.5 ms  réplica=app3  request_id=98ae198e81169e27265da56f20ce2244
+  rafaga-5  HTTP 429    82.3 ms  réplica=(nginx)  request_id=fb9858f35f82bd8820b9c3c85b9ea663
+  rafaga-6  HTTP 201   148.6 ms  réplica=app2  request_id=7b0ec9cb6f1e72c75c12c7d49c4295bd
+  rafaga-7  HTTP 429    84.4 ms  réplica=(nginx)  request_id=f91374d76df7669bcbbc750da5d03f53
+  rafaga-8  HTTP 429    87.5 ms  réplica=(nginx)  request_id=dc3175abbfef45f858dce34aa891f586
+  rafaga-9  HTTP 429    91.5 ms  réplica=(nginx)  request_id=682e4ea8583d26ea85489eef7fd86723
+  rafaga-10 HTTP 429    93.1 ms  réplica=(nginx)  request_id=2d489de77c8152cb73b420b92ba9bc5f
+  rafaga-11 HTTP 429   108.2 ms  réplica=(nginx)  request_id=c56035ec678ddbd9c6feb900ddfda3ea
+  rafaga-12 HTTP 429   105.7 ms  réplica=(nginx)  request_id=f8e27da18bfcadd1e7f47b5558489243
+  rafaga-13 HTTP 429   117.8 ms  réplica=(nginx)  request_id=e6d02e127ce418b2ad205c4f68b4771e
+  rafaga-14 HTTP 429   110.6 ms  réplica=(nginx)  request_id=9257651a2583976743792294518d359c
+  rafaga-15 HTTP 429   121.5 ms  réplica=(nginx)  request_id=40231c8a6d9e044ad83e289159f91577
+  rafaga-16 HTTP 429   125.8 ms  réplica=(nginx)  request_id=b9893112b5b41188abed136e75c5e5b2
+  rafaga-17 HTTP 429   132.6 ms  réplica=(nginx)  request_id=35c940968340ff44033f015d2b786600
+  rafaga-18 HTTP 429   127.9 ms  réplica=(nginx)  request_id=b8d3d4b337281584a236abf8d72133b7
+  rafaga-19 HTTP 429   134.9 ms  réplica=(nginx)  request_id=6e04173440234e88e2af9136bab0b62c
+  rafaga-20 HTTP 429   137.1 ms  réplica=(nginx)  request_id=f9b6e1f1b541c5d524c8d83b75d2c4ee
+
+## Fase 2: 5 solicitudes a 1 por segundo
+  2026-10-10 11:37:15.501-05:00  HTTP 201  réplica=app3
+  2026-10-10 11:37:16.517-05:00  HTTP 201  réplica=app1
+  2026-10-10 11:37:17.528-05:00  HTTP 201  réplica=app2
+  2026-10-10 11:37:18.542-05:00  HTTP 201  réplica=app3
+  2026-10-10 11:37:19.559-05:00  HTTP 201  réplica=app1
+Códigos HTTP fase 2: {
+  "201": 5
+}
+✔ CUMPLE: la ráfaga produjo 15 rechazos HTTP 429
+✔ CUMPLE: se admitieron 5 (1 + ráfaga de 4) sin espera
+✔ CUMPLE: los 429 los generó Nginx (no llevan X-Instance-ID: no llegaron a la aplicación)
+✔ CUMPLE: al reducir la frecuencia se admitieron todas las solicitudes

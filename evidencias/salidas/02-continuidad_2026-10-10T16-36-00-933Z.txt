@@ -1,0 +1,129 @@
+Evidencia del cliente: evidencias\cliente\02-continuidad_2026-10-10T16-36-00-933Z.jsonl
+Salida de la prueba:   evidencias\salidas\02-continuidad_2026-10-10T16-36-00-933Z.txt
+
+# Prueba 02 - Continuidad del servicio al detener y restablecer app2
+
+[ANTES            ] 2026-10-10 11:36:00.939-05:00  RESPUESTA_RECIBIDA  HTTP 200  app3
+[ANTES            ] 2026-10-10 11:36:01.419-05:00  RESPUESTA_RECIBIDA  HTTP 200  app1
+[ANTES            ] 2026-10-10 11:36:01.848-05:00  RESPUESTA_RECIBIDA  HTTP 200  app2
+[ANTES            ] 2026-10-10 11:36:02.266-05:00  RESPUESTA_RECIBIDA  HTTP 200  app3
+[ANTES            ] 2026-10-10 11:36:02.696-05:00  RESPUESTA_RECIBIDA  HTTP 200  app1
+[ANTES            ] 2026-10-10 11:36:03.116-05:00  RESPUESTA_RECIBIDA  HTTP 200  app2
+[ANTES            ] 2026-10-10 11:36:03.529-05:00  RESPUESTA_RECIBIDA  HTTP 200  app3
+[ANTES            ] 2026-10-10 11:36:03.946-05:00  RESPUESTA_RECIBIDA  HTTP 200  app1
+[ANTES            ] 2026-10-10 11:36:04.368-05:00  RESPUESTA_RECIBIDA  HTTP 200  app2
+[ANTES            ] 2026-10-10 11:36:04.795-05:00  RESPUESTA_RECIBIDA  HTTP 200  app3
+
+>>> 2026-10-10 11:36:05.007-05:00  docker compose stop app2
+[DETENIENDO_APP2  ] 2026-10-10 11:36:05.205-05:00  RESPUESTA_RECIBIDA  HTTP 200  app1
+Container envios-app-app2-1  Stopping
+ Container envios-app-app2-1  Stopped
+>>> 2026-10-10 11:36:05.491-05:00  app2 detenida
+
+[APP2_DETENIDA    ] 2026-10-10 11:36:05.626-05:00  RESPUESTA_RECIBIDA  HTTP 200  app3
+[APP2_DETENIDA    ] 2026-10-10 11:36:08.050-05:00  RESPUESTA_RECIBIDA  HTTP 200  app1
+[APP2_DETENIDA    ] 2026-10-10 11:36:08.465-05:00  RESPUESTA_RECIBIDA  HTTP 200  app3
+[APP2_DETENIDA    ] 2026-10-10 11:36:08.881-05:00  RESPUESTA_RECIBIDA  HTTP 200  app1
+[APP2_DETENIDA    ] 2026-10-10 11:36:09.294-05:00  RESPUESTA_RECIBIDA  HTTP 200  app3
+[APP2_DETENIDA    ] 2026-10-10 11:36:09.713-05:00  RESPUESTA_RECIBIDA  HTTP 200  app1
+[APP2_DETENIDA    ] 2026-10-10 11:36:10.162-05:00  RESPUESTA_RECIBIDA  HTTP 200  app3
+[APP2_DETENIDA    ] 2026-10-10 11:36:10.593-05:00  RESPUESTA_RECIBIDA  HTTP 200  app1
+[APP2_DETENIDA    ] 2026-10-10 11:36:11.009-05:00  RESPUESTA_RECIBIDA  HTTP 200  app3
+[APP2_DETENIDA    ] 2026-10-10 11:36:11.427-05:00  RESPUESTA_RECIBIDA  HTTP 200  app1
+[APP2_DETENIDA    ] 2026-10-10 11:36:11.841-05:00  RESPUESTA_RECIBIDA  HTTP 200  app3
+[APP2_DETENIDA    ] 2026-10-10 11:36:12.267-05:00  RESPUESTA_RECIBIDA  HTTP 200  app1
+[APP2_DETENIDA    ] 2026-10-10 11:36:12.688-05:00  RESPUESTA_RECIBIDA  HTTP 200  app3
+[APP2_DETENIDA    ] 2026-10-10 11:36:13.103-05:00  RESPUESTA_RECIBIDA  HTTP 200  app1
+
+>>> 2026-10-10 11:36:13.501-05:00  docker compose start app2
+[RESTABLECIENDO   ] 2026-10-10 11:36:13.514-05:00  RESPUESTA_RECIBIDA  HTTP 200  app3
+[RESTABLECIENDO   ] 2026-10-10 11:36:13.920-05:00  RESPUESTA_RECIBIDA  HTTP 200  app1
+Container envios-app-db-1  Waiting
+ Container envios-app-db-1  Healthy
+ Container envios-app-app2-1  Starting
+ Container envios-app-app2-1  Started
+>>> 2026-10-10 11:36:14.489-05:00  app2 iniciada; esperando que vuelva a recibir tráfico
+
+[RESTABLECIENDO   ] 2026-10-10 11:36:14.333-05:00  RESPUESTA_RECIBIDA  HTTP 200  app2
+[RESTABLECIENDO   ] 2026-10-10 11:36:15.844-05:00  RESPUESTA_RECIBIDA  HTTP 200  app3
+[RESTABLECIENDO   ] 2026-10-10 11:36:16.249-05:00  RESPUESTA_RECIBIDA  HTTP 200  app1
+[RESTABLECIENDO   ] 2026-10-10 11:36:16.658-05:00  RESPUESTA_RECIBIDA  HTTP 200  app2
+[RESTABLECIENDO   ] 2026-10-10 11:36:17.075-05:00  RESPUESTA_RECIBIDA  HTTP 200  app3
+[RESTABLECIENDO   ] 2026-10-10 11:36:17.490-05:00  RESPUESTA_RECIBIDA  HTTP 200  app1
+[RESTABLECIENDO   ] 2026-10-10 11:36:17.895-05:00  RESPUESTA_RECIBIDA  HTTP 200  app2
+[RESTABLECIENDO   ] 2026-10-10 11:36:18.304-05:00  RESPUESTA_RECIBIDA  HTTP 200  app3
+[RESTABLECIENDO   ] 2026-10-10 11:36:18.722-05:00  RESPUESTA_RECIBIDA  HTTP 200  app1
+[RESTABLECIENDO   ] 2026-10-10 11:36:19.137-05:00  RESPUESTA_RECIBIDA  HTTP 200  app2
+[RESTABLECIENDO   ] 2026-10-10 11:36:19.548-05:00  RESPUESTA_RECIBIDA  HTTP 200  app3
+[RESTABLECIENDO   ] 2026-10-10 11:36:19.969-05:00  RESPUESTA_RECIBIDA  HTTP 200  app1
+[RESTABLECIENDO   ] 2026-10-10 11:36:20.384-05:00  RESPUESTA_RECIBIDA  HTTP 200  app2
+[RESTABLECIENDO   ] 2026-10-10 11:36:20.799-05:00  RESPUESTA_RECIBIDA  HTTP 200  app3
+[RESTABLECIENDO   ] 2026-10-10 11:36:21.220-05:00  RESPUESTA_RECIBIDA  HTTP 200  app1
+[RESTABLECIENDO   ] 2026-10-10 11:36:21.634-05:00  RESPUESTA_RECIBIDA  HTTP 200  app2
+[RESTABLECIENDO   ] 2026-10-10 11:36:22.061-05:00  RESPUESTA_RECIBIDA  HTTP 200  app3
+[RESTABLECIENDO   ] 2026-10-10 11:36:22.478-05:00  RESPUESTA_RECIBIDA  HTTP 200  app1
+[RESTABLECIENDO   ] 2026-10-10 11:36:22.891-05:00  RESPUESTA_RECIBIDA  HTTP 200  app2
+[RESTABLECIENDO   ] 2026-10-10 11:36:23.308-05:00  RESPUESTA_RECIBIDA  HTTP 200  app3
+[RESTABLECIENDO   ] 2026-10-10 11:36:23.726-05:00  RESPUESTA_RECIBIDA  HTTP 200  app1
+[RESTABLECIENDO   ] 2026-10-10 11:36:24.146-05:00  RESPUESTA_RECIBIDA  HTTP 200  app2
+[RESTABLECIENDO   ] 2026-10-10 11:36:24.558-05:00  RESPUESTA_RECIBIDA  HTTP 200  app3
+[RESTABLECIENDO   ] 2026-10-10 11:36:24.975-05:00  RESPUESTA_RECIBIDA  HTTP 200  app1
+[RESTABLECIENDO   ] 2026-10-10 11:36:25.388-05:00  RESPUESTA_RECIBIDA  HTTP 200  app2
+[RESTABLECIENDO   ] 2026-10-10 11:36:25.804-05:00  RESPUESTA_RECIBIDA  HTTP 200  app3
+[RESTABLECIENDO   ] 2026-10-10 11:36:26.222-05:00  RESPUESTA_RECIBIDA  HTTP 200  app1
+
+Resumen por fase: {
+  "ANTES": {
+    "solicitudes": 10,
+    "exitosas": 10,
+    "errores": 0,
+    "latencia_max_ms": 65.8,
+    "por_instancia": {
+      "app3": 4,
+      "app1": 3,
+      "app2": 3
+    }
+  },
+  "DETENIENDO_APP2": {
+    "solicitudes": 1,
+    "exitosas": 1,
+    "errores": 0,
+    "latencia_max_ms": 6.5,
+    "por_instancia": {
+      "app1": 1
+    }
+  },
+  "APP2_DETENIDA": {
+    "solicitudes": 14,
+    "exitosas": 14,
+    "errores": 0,
+    "latencia_max_ms": 2012.9,
+    "por_instancia": {
+      "app3": 7,
+      "app1": 7
+    }
+  },
+  "RESTABLECIENDO": {
+    "solicitudes": 29,
+    "exitosas": 29,
+    "errores": 0,
+    "latencia_max_ms": 1102,
+    "por_instancia": {
+      "app3": 10,
+      "app1": 10,
+      "app2": 9
+    }
+  }
+}
+
+Errores durante la transición: 0
+
+Errores de Nginx hacia las réplicas durante la prueba (logs/nginx/error.log): 2
+ - 2026/10/10 11:36:07 [warn] 21#21: *6 upstream server temporarily disabled while connecting to upstream, client: 172.19.0.1, server: , request: "GET /health HTTP/1.1", upstream: "http://172.19.0.4:3000/health", host: "localhost:8080"
+ - 2026/10/10 11:36:07 [error] 21#21: *6 upstream timed out (110: Operation timed out) while connecting to upstream, client: 172.19.0.1, server: , request: "GET /health HTTP/1.1", upstream: "http://172.19.0.4:3000/health", host: "localhost:8080"
+
+Solicitudes con latencia > 1 s (Nginx esperó a app2 y reintentó en otra réplica):
+ - [APP2_DETENIDA] 2026-10-10 11:36:05.626-05:00 2012.9 ms -> HTTP 200 app3
+ - [RESTABLECIENDO] 2026-10-10 11:36:14.333-05:00 1102 ms -> HTTP 200 app2
+✔ CUMPLE: con app2 detenida atendieron app1 y app3
+✔ CUMPLE: app2 volvió a recibir solicitudes tras restablecerla

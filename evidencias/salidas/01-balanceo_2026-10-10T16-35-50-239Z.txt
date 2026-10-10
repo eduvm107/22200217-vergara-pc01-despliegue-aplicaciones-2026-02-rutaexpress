@@ -1,0 +1,25 @@
+Evidencia del cliente: evidencias\cliente\01-balanceo_2026-10-10T16-35-50-239Z.jsonl
+Salida de la prueba:   evidencias\salidas\01-balanceo_2026-10-10T16-35-50-239Z.txt
+
+# Prueba 01 - Balanceo: 12 GET /health, una cada 600 ms
+
+ 1. 2026-10-10 11:35:50.244-05:00  HTTP 200  X-Instance-ID=app3  body.instance=app3
+ 2. 2026-10-10 11:35:50.979-05:00  HTTP 200  X-Instance-ID=app1  body.instance=app1
+ 3. 2026-10-10 11:35:51.613-05:00  HTTP 200  X-Instance-ID=app2  body.instance=app2
+ 4. 2026-10-10 11:35:52.245-05:00  HTTP 200  X-Instance-ID=app3  body.instance=app3
+ 5. 2026-10-10 11:35:52.875-05:00  HTTP 200  X-Instance-ID=app1  body.instance=app1
+ 6. 2026-10-10 11:35:53.499-05:00  HTTP 200  X-Instance-ID=app2  body.instance=app2
+ 7. 2026-10-10 11:35:54.137-05:00  HTTP 200  X-Instance-ID=app3  body.instance=app3
+ 8. 2026-10-10 11:35:54.762-05:00  HTTP 200  X-Instance-ID=app1  body.instance=app1
+ 9. 2026-10-10 11:35:55.388-05:00  HTTP 200  X-Instance-ID=app2  body.instance=app2
+10. 2026-10-10 11:35:56.002-05:00  HTTP 200  X-Instance-ID=app3  body.instance=app3
+11. 2026-10-10 11:35:56.617-05:00  HTTP 200  X-Instance-ID=app1  body.instance=app1
+12. 2026-10-10 11:35:57.230-05:00  HTTP 200  X-Instance-ID=app2  body.instance=app2
+
+Respuestas exitosas por instancia: {
+  "app3": 4,
+  "app1": 4,
+  "app2": 4
+}
+✔ CUMPLE: 12 solicitudes exitosas (mínimo 9)
+✔ CUMPLE: respondieron las tres instancias

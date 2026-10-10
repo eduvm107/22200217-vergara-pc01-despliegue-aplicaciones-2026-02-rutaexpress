@@ -1,0 +1,4 @@
+ idempotency_key | count 
+-----------------+-------
+(0 rows)
+

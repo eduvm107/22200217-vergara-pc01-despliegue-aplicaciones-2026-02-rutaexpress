@@ -1,0 +1,79 @@
+Evidencia del cliente: evidencias\cliente\03-timeout-reintento_2026-10-10T16-36-29-766Z.jsonl
+Salida de la prueba:   evidencias\salidas\03-timeout-reintento_2026-10-10T16-36-29-766Z.txt
+
+# Prueba 03 - Timeout del cliente y reintento
+Idempotency-Key de la operación: 7eef69cf-03ce-4b08-ac79-372733fa61e6
+
+## Intento 1: X-Simular-Demora=5000 ms, el cliente espera 2000 ms
+{
+  "etiqueta": "intento-1-con-demora",
+  "inicio_cliente": "2026-10-10 11:36:29.772-05:00",
+  "metodo": "POST",
+  "ruta": "/envios",
+  "idempotency_key": "7eef69cf-03ce-4b08-ac79-372733fa61e6",
+  "simular_demora_ms": 5000,
+  "timeout_cliente_ms": 2000,
+  "resultado_cliente": "TIMEOUT_CLIENTE",
+  "http_status": null,
+  "x_instance_id": null,
+  "error": "El cliente dejó de esperar a los 2000 ms",
+  "fin_cliente": "2026-10-10 11:36:31.796-05:00",
+  "duracion_ms": 2023.3
+}
+
+## Envío en la base después del timeout del cliente: {
+  "id": 1,
+  "instancia_creadora": "app2",
+  "creado_en": "2026-10-10 11:36:29.854294"
+}
+
+## Eventos registrados por el servidor para el intento 1:
+      hora       | instancia |         evento         | envio_id | http_status | duracion_ms |                          detalle                           
+-----------------+-----------+------------------------+----------+-------------+-------------+------------------------------------------------------------
+ 11:36:29.837528 | app2      | RECIBIDO               |          |             |             | 
+ 11:36:29.855994 | app2      | REGISTRADO             |        1 |             |             | 
+ 11:36:31.797112 | app2      | CLIENTE_DESCONECTADO   |          |             |    1959.686 | La conexión se cerró antes de enviar la respuesta
+ 11:36:34.858565 | app2      | RESPUESTA_NO_ENTREGADA |        1 |         201 |    5021.124 | El cliente cerró la conexión antes de recibir la respuesta
+(4 rows)
+
+El cliente dejó de esperar a las 2026-10-10 11:36:31.796-05:00; el envío 1 se creó a las 2026-10-10 11:36:29.854294 en app2.
+
+## Reintento: misma Idempotency-Key, sin demora
+{
+  "etiqueta": "reintento-1",
+  "inicio_cliente": "2026-10-10 11:36:36.843-05:00",
+  "metodo": "POST",
+  "ruta": "/envios",
+  "idempotency_key": "7eef69cf-03ce-4b08-ac79-372733fa61e6",
+  "simular_demora_ms": null,
+  "timeout_cliente_ms": 10000,
+  "resultado_cliente": "RESPUESTA_RECIBIDA",
+  "http_status": 200,
+  "x_instance_id": "app3",
+  "x_request_id": "e085316ce3412f1809a2759727fc063e",
+  "idempotent_replayed": true,
+  "envio_id": 1,
+  "instance": null,
+  "error_codigo": null,
+  "fin_cliente": "2026-10-10 11:36:36.870-05:00",
+  "duracion_ms": 27
+}
+
+## Intentos de esta operación (vista v_intentos):
+    recibido     | instancia | resultado_servidor | envio_id | http_status | respuesta_cliente |   registrado    | cliente_desconecto 
+-----------------+-----------+--------------------+----------+-------------+-------------------+-----------------+--------------------
+ 11:36:29.837528 | app2      | REGISTRADO         |        1 |         201 | NO_ENTREGADA      | 11:36:29.855994 | 11:36:31.797112
+ 11:36:36.851000 | app3      | REPETIDO           |        1 |         200 | ENTREGADA         |                 | 
+(2 rows)
+
+Envíos con esta clave: 1
+
+## Registro de Nginx para esta operación (logs/nginx/acceso.jsonl):
+  2026-10-10T11:36:31-05:00  POST /envios  HTTP 499  upstream=172.19.0.4:3000  tiempo=1.960s  request_id=a569759b4199e2201b310ecc4220d190
+  2026-10-10T11:36:36-05:00  POST /envios  HTTP 200  upstream=172.19.0.3:3000  tiempo=0.017s  request_id=e085316ce3412f1809a2759727fc063e
+✔ CUMPLE: el intento 1 terminó por timeout del cliente (no por un código HTTP de error)
+✔ CUMPLE: el envío quedó registrado aunque el cliente no recibió respuesta
+✔ CUMPLE: el reintento devolvió el mismo envío (id 1) con Idempotent-Replayed: true
+✔ CUMPLE: el reintento lo atendió otra réplica (app3 ≠ app2)
+✔ CUMPLE: existe un solo envío para la operación
+✔ CUMPLE: Nginx registró el cierre del cliente (HTTP 499) en el intento inicial

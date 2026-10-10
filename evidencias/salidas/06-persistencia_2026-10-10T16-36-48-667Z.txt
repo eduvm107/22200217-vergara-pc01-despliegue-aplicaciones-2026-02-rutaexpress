@@ -1,0 +1,132 @@
+Evidencia del cliente: evidencias\cliente\06-persistencia_2026-10-10T16-36-48-667Z.jsonl
+Salida de la prueba:   evidencias\salidas\06-persistencia_2026-10-10T16-36-48-667Z.txt
+
+# Prueba 06 - Persistencia al recrear contenedores
+
+Envío 1: HTTP 201 id=5 réplica=app2 clave=122f12e9-6f12-4093-ac66-462fe0155557
+Envío 2: HTTP 201 id=6 réplica=app3 clave=afd2f08d-1f15-4c8a-9cb1-d08f4f07551e
+Envío 3: HTTP 201 id=7 réplica=app1 clave=72c17843-66d6-43de-bb80-361772d65d7b
+
+## Antes de recrear:
+ id |           idempotency_key            | destinatario  |              direccion               | instancia_creadora |           creado_en           
+----+--------------------------------------+---------------+--------------------------------------+--------------------+-------------------------------
+  5 | 122f12e9-6f12-4093-ac66-462fe0155557 | María Quispe  | Av. Arequipa 1520, Lince             | app2               | 2026-10-10 11:36:48.729688-05
+  6 | afd2f08d-1f15-4c8a-9cb1-d08f4f07551e | Jorge Salazar | Av. Brasil 2840, Pueblo Libre        | app3               | 2026-10-10 11:36:49.466223-05
+  7 | 72c17843-66d6-43de-bb80-361772d65d7b | Rosa Huamán   | Jr. de la Unión 615, Cercado de Lima | app1               | 2026-10-10 11:36:50.201669-05
+(3 rows)
+
+>>> 2026-10-10 11:36:51.710-05:00  docker compose down   (sin -v: el volumen db_data se conserva)
+Container envios-app-nginx-1  Stopping
+ Container envios-app-nginx-1  Stopped
+ Container envios-app-nginx-1  Removing
+ Container envios-app-nginx-1  Removed
+ Container envios-app-app1-1  Stopping
+ Container envios-app-app2-1  Stopping
+ Container envios-app-app3-1  Stopping
+ Container envios-app-app2-1  Stopped
+ Container envios-app-app2-1  Removing
+ Container envios-app-app2-1  Removed
+ Container envios-app-app3-1  Stopped
+ Container envios-app-app3-1  Removing
+ Container envios-app-app3-1  Removed
+ Container envios-app-app1-1  Stopped
+ Container envios-app-app1-1  Removing
+ Container envios-app-app1-1  Removed
+ Container envios-app-db-1  Stopping
+ Container envios-app-db-1  Stopped
+ Container envios-app-db-1  Removing
+ Container envios-app-db-1  Removed
+ Network envios-app_default  Removing
+ Network envios-app_default  Removed
+>>> 2026-10-10 11:36:53.806-05:00  docker compose up -d --wait
+Network envios-app_default  Creating
+ Network envios-app_default  Created
+ Container envios-app-db-1  Creating
+ Container envios-app-db-1  Created
+ Container envios-app-app2-1  Creating
+ Container envios-app-app3-1  Creating
+ Container envios-app-app1-1  Creating
+ Container envios-app-app1-1  Created
+ Container envios-app-app3-1  Created
+ Container envios-app-app2-1  Created
+ Container envios-app-nginx-1  Creating
+ Container envios-app-nginx-1  Created
+ Container envios-app-db-1  Starting
+ Container envios-app-db-1  Started
+ Container envios-app-db-1  Waiting
+ Container envios-app-db-1  Waiting
+ Container envios-app-db-1  Waiting
+ Container envios-app-db-1  Healthy
+ Container envios-app-db-1  Healthy
+ Container envios-app-app3-1  Starting
+ Container envios-app-app2-1  Starting
+ Container envios-app-db-1  Healthy
+ Container envios-app-app1-1  Starting
+ Container envios-app-app2-1  Started
+ Container envios-app-app1-1  Started
+ Container envios-app-app3-1  Started
+ Container envios-app-app2-1  Waiting
+ Container envios-app-app3-1  Waiting
+ Container envios-app-app1-1  Waiting
+ Container envios-app-app1-1  Healthy
+ Container envios-app-app3-1  Healthy
+ Container envios-app-app2-1  Healthy
+ Container envios-app-nginx-1  Starting
+ Container envios-app-nginx-1  Started
+ Container envios-app-nginx-1  Waiting
+ Container envios-app-app1-1  Waiting
+ Container envios-app-app2-1  Waiting
+ Container envios-app-app3-1  Waiting
+ Container envios-app-db-1  Waiting
+ Container envios-app-nginx-1  Healthy
+ Container envios-app-app1-1  Healthy
+ Container envios-app-app2-1  Healthy
+ Container envios-app-app3-1  Healthy
+ Container envios-app-db-1  Healthy
+
+IDs de contenedores antes:
+4f2637511987e9592572c974a40366a2982c0884653f7f16da10685b4d60e776
+afaa65fab9f3a2e60492ddf4e39ff19ff7c92999a4244558b02e798a816c3368
+288380018c30071fb661ff7fb0c3a3d0d5f604155a25b5cc5c17f7082d3cf545
+73ed32f12cb86915cba6293286bd90780a64fbef14aeaf8f99a73a913baaaf2a
+594cfbc4f25edd9e69e213eca9f13383b620a512555b76e22f211de9f7155df7
+IDs de contenedores después:
+888044bf4a9b7cfae0ebf1f58a728e2fb0c7d24b18e5b4dde4acf38fbaff79cc
+c897fb17720f600b5faa868464308aaa8292458d207144a39a0921816a8b1e28
+5ccdb29c58806067988d27a3d45e9c908d9e28512f7aac4c7b0b7ec04eba3350
+535e25ad676c5d2fd38761539833220cf3cc5a1484ab0f4f1a3ea1e2719bc8e6
+657a6e46a8498892f27b9e3353f283758bdc2a6225f0e618e430dea5871a06ef
+
+## Después de recrear:
+ id |           idempotency_key            | destinatario  |              direccion               | instancia_creadora |           creado_en           
+----+--------------------------------------+---------------+--------------------------------------+--------------------+-------------------------------
+  5 | 122f12e9-6f12-4093-ac66-462fe0155557 | María Quispe  | Av. Arequipa 1520, Lince             | app2               | 2026-10-10 11:36:48.729688-05
+  6 | afd2f08d-1f15-4c8a-9cb1-d08f4f07551e | Jorge Salazar | Av. Brasil 2840, Pueblo Libre        | app3               | 2026-10-10 11:36:49.466223-05
+  7 | 72c17843-66d6-43de-bb80-361772d65d7b | Rosa Huamán   | Jr. de la Unión 615, Cercado de Lima | app1               | 2026-10-10 11:36:50.201669-05
+(3 rows)
+
+## Reintento de la operación 1 después de la recreación:
+{
+  "etiqueta": "reintento-post-recreacion",
+  "inicio_cliente": "2026-10-10 11:37:08.857-05:00",
+  "metodo": "POST",
+  "ruta": "/envios",
+  "idempotency_key": "122f12e9-6f12-4093-ac66-462fe0155557",
+  "simular_demora_ms": null,
+  "timeout_cliente_ms": 10000,
+  "resultado_cliente": "RESPUESTA_RECIBIDA",
+  "http_status": 200,
+  "x_instance_id": "app3",
+  "x_request_id": "cdd47175bddd1ef45105650fe4760e35",
+  "idempotent_replayed": true,
+  "envio_id": 5,
+  "instance": null,
+  "error_codigo": null,
+  "fin_cliente": "2026-10-10 11:37:08.890-05:00",
+  "duracion_ms": 32.6
+}
+Envíos con la clave de la operación 1: 1
+✔ CUMPLE: se registraron 3 envíos distintos
+✔ CUMPLE: todos los contenedores son nuevos (IDs distintos)
+✔ CUMPLE: después de recrear se conservan los mismos ids y datos
+✔ CUMPLE: el reintento devolvió el envío 5 existente y no se creó un duplicado

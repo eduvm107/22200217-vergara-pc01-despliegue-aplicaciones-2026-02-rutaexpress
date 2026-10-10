@@ -1,0 +1,21 @@
+ envio_id |           idempotency_key            |       destinatario        |           creado_en           | instancia_creadora | total_intentos |                       secuencia_intentos                       
+----------+--------------------------------------+---------------------------+-------------------------------+--------------------+----------------+----------------------------------------------------------------
+        1 | 7eef69cf-03ce-4b08-ac79-372733fa61e6 | Ana Torres                | 2026-10-10 11:36:29.854294-05 | app2               |              2 | app2:REGISTRADO:201:NO_ENTREGADA | app3:REPETIDO:200:ENTREGADA
+        2 | 8a1dfdcb-e810-40d1-8186-027741272527 | Carlos Ramos              | 2026-10-10 11:36:40.579172-05 | app2               |              2 | app2:REGISTRADO:201:ENTREGADA | app1:REPETIDO:200:ENTREGADA
+        3 | f5466c9a-71ea-4a4e-b687-7fee45027836 | Lucía Mendoza             | 2026-10-10 11:36:44.584513-05 | app3               |              1 | app3:REGISTRADO:201:ENTREGADA
+        4 | a4189e6c-e201-445f-8b78-4adecd1987eb | Lucía Mendoza             | 2026-10-10 11:36:45.307376-05 | app1               |              1 | app1:REGISTRADO:201:ENTREGADA
+        5 | 122f12e9-6f12-4093-ac66-462fe0155557 | María Quispe              | 2026-10-10 11:36:48.729688-05 | app2               |              2 | app2:REGISTRADO:201:ENTREGADA | app3:REPETIDO:200:ENTREGADA
+        6 | afd2f08d-1f15-4c8a-9cb1-d08f4f07551e | Jorge Salazar             | 2026-10-10 11:36:49.466223-05 | app3               |              1 | app3:REGISTRADO:201:ENTREGADA
+        7 | 72c17843-66d6-43de-bb80-361772d65d7b | Rosa Huamán               | 2026-10-10 11:36:50.201669-05 | app1               |              1 | app1:REGISTRADO:201:ENTREGADA
+        8 | da2f8fbe-a2ac-4a7d-8e3a-f376d3495f29 | Cliente prueba ráfaga 4   | 2026-10-10 11:37:12.387297-05 | app3               |              1 | app3:REGISTRADO:201:ENTREGADA
+        9 | 997cf071-0c61-45e1-b0a8-a4e576a6a0a7 | Cliente prueba ráfaga 1   | 2026-10-10 11:37:12.418686-05 | app1               |              1 | app1:REGISTRADO:201:ENTREGADA
+       10 | a48cf5df-8119-4eee-9eac-f5c74008bc80 | Cliente prueba ráfaga 3   | 2026-10-10 11:37:12.421219-05 | app1               |              1 | app1:REGISTRADO:201:ENTREGADA
+       11 | c178d10a-1054-4a19-9944-ef388ba19ec6 | Cliente prueba ráfaga 2   | 2026-10-10 11:37:12.450595-05 | app2               |              1 | app2:REGISTRADO:201:ENTREGADA
+       12 | 0396076c-3b4b-4fcf-97cb-7d23265d45e4 | Cliente prueba ráfaga 6   | 2026-10-10 11:37:12.453722-05 | app2               |              1 | app2:REGISTRADO:201:ENTREGADA
+       13 | 31e6dbe3-7f1d-4b8d-9fca-b53d47753354 | Cliente prueba ráfaga 101 | 2026-10-10 11:37:15.506467-05 | app3               |              1 | app3:REGISTRADO:201:ENTREGADA
+       14 | 95af3906-5666-45a6-9cf8-2e15cd75860b | Cliente prueba ráfaga 102 | 2026-10-10 11:37:16.522735-05 | app1               |              1 | app1:REGISTRADO:201:ENTREGADA
+       15 | 190143a8-0bf6-41bc-887f-1e7b6c2ed34e | Cliente prueba ráfaga 103 | 2026-10-10 11:37:17.537842-05 | app2               |              1 | app2:REGISTRADO:201:ENTREGADA
+       16 | 78e22c8f-4551-46fe-abd2-354580e8c28d | Cliente prueba ráfaga 104 | 2026-10-10 11:37:18.549324-05 | app3               |              1 | app3:REGISTRADO:201:ENTREGADA
+       17 | d42b8b8e-7e55-4dfc-b398-5cb3a1424b3a | Cliente prueba ráfaga 105 | 2026-10-10 11:37:19.5706-05   | app1               |              1 | app1:REGISTRADO:201:ENTREGADA
+(17 rows)
+
