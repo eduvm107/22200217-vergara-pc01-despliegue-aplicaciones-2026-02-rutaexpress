@@ -3,7 +3,7 @@ name: envios-app
 # Configuración común de las tres réplicas: misma imagen, misma base,
 # solo cambia INSTANCE_ID. El puerto 3000 no se publica al host.
 x-app: &app
-  image: ${DOCKERHUB_USER}/envios-app:${APP_VERSION}
+  image: ${DOCKERHUB_USER:-eduardo30458}/envios-app:${APP_VERSION:-1.0.0}
   restart: unless-stopped
   expose:
     - "3000"
@@ -15,9 +15,9 @@ x-app-env: &app-env
   TZ: America/Lima
   DB_HOST: db
   DB_PORT: 5432
-  DB_USER: ${DB_USER}
-  DB_PASSWORD: ${DB_PASSWORD}
-  DB_NAME: ${DB_NAME}
+  DB_USER: ${DB_USER:?Copie .env.example como .env}
+  DB_PASSWORD: ${DB_PASSWORD:?Copie .env.example como .env}
+  DB_NAME: ${DB_NAME:?Copie .env.example como .env}
   PERMITIR_SIMULACION: ${PERMITIR_SIMULACION:-false}
 
 services:
@@ -46,9 +46,9 @@ services:
     command: ["postgres", "-c", "timezone=America/Lima", "-c", "log_timezone=America/Lima"]
     environment:
       TZ: America/Lima
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER:?Copie .env.example como .env}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Copie .env.example como .env}
+      POSTGRES_DB: ${DB_NAME:?Copie .env.example como .env}
     ports:
       - "15432:5432"
     volumes:

@@ -26,7 +26,7 @@ Cliente  ──────► │ limit_req POST /envios: 2 r/s, burst 4 → 42
 Requisitos: Docker Desktop (Compose v2) y Node.js 22 o superior (solo para los scripts de prueba).
 
 ```bash
-cp .env.example .env          # completar DB_USER, DB_PASSWORD y DB_NAME
+cp .env.example .env          # los valores de ejemplo funcionan tal cual (Windows: copy .env.example .env)
 docker compose pull           # descarga la imagen publicada en Docker Hub
 docker compose up -d --wait   # db, app1, app2, app3 y nginx
 node pruebas/ejecutar-todas.mjs
