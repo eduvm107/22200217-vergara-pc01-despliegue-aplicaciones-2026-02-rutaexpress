@@ -1,0 +1,65 @@
+# Publicación y descarga de la imagen - 2026-10-10 11:44:14 -0500
+
+$ docker push eduardo30458/envios-app:1.0.0
+The push refers to repository [docker.io/eduardo30458/envios-app]
+e2de96513ba9: Mounted from library/nginx
+49a74ce682b7: Pushed
+3cf45ebb2d0c: Pushed
+020a26aefab9: Pushed
+e96bcc2531e9: Pushed
+a716353f4ffb: Pushed
+d39db1cf9caa: Pushed
+e554276b05e6: Pushed
+96117210267c: Pushed
+f7f2d304681a: Pushed
+1.0.0: digest: sha256:4f5a8e45bca01d684fc5cad75f962558a5f514b0277d8a789e63eb26b4abf779 size: 856
+
+$ docker compose stop app1 app2 app3 && docker compose rm -f app1 app2 app3
+ Container envios-app-app3-1  Stopping
+ Container envios-app-app2-1  Stopping
+ Container envios-app-app1-1  Stopping
+ Container envios-app-app3-1  Stopped
+ Container envios-app-app1-1  Stopped
+ Container envios-app-app2-1  Stopped
+Going to remove envios-app-app3-1, envios-app-app2-1, envios-app-app1-1
+ Container envios-app-app1-1  Removing
+ Container envios-app-app2-1  Removing
+ Container envios-app-app3-1  Removing
+ Container envios-app-app2-1  Removed
+ Container envios-app-app3-1  Removed
+ Container envios-app-app1-1  Removed
+
+$ docker rmi eduardo30458/envios-app:1.0.0
+Untagged: eduardo30458/envios-app:1.0.0
+Deleted: sha256:4f5a8e45bca01d684fc5cad75f962558a5f514b0277d8a789e63eb26b4abf779
+
+$ docker image ls eduardo30458/envios-app
+REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
+
+$ docker pull eduardo30458/envios-app:1.0.0
+1.0.0: Pulling from eduardo30458/envios-app
+49a74ce682b7: Pulling fs layer
+020a26aefab9: Pulling fs layer
+96117210267c: Pulling fs layer
+3cf45ebb2d0c: Pulling fs layer
+a716353f4ffb: Pulling fs layer
+020a26aefab9: Already exists
+96117210267c: Already exists
+3cf45ebb2d0c: Already exists
+49a74ce682b7: Already exists
+a716353f4ffb: Already exists
+49a74ce682b7: Pull complete
+a716353f4ffb: Pull complete
+96117210267c: Pull complete
+020a26aefab9: Pull complete
+3cf45ebb2d0c: Pull complete
+Digest: sha256:4f5a8e45bca01d684fc5cad75f962558a5f514b0277d8a789e63eb26b4abf779
+Status: Downloaded newer image for eduardo30458/envios-app:1.0.0
+docker.io/eduardo30458/envios-app:1.0.0
+
+$ docker image ls eduardo30458/envios-app
+REPOSITORY                TAG       IMAGE ID       CREATED          SIZE
+eduardo30458/envios-app   1.0.0     4f5a8e45bca0   10 minutes ago   247MB
+
+$ docker run --rm --entrypoint id eduardo30458/envios-app:1.0.0
+uid=100(app) gid=101(app) groups=101(app)
