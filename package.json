@@ -1,0 +1,25 @@
+{
+  "name": "envios-app",
+  "version": "1.0.0",
+  "description": "RutaExpress - registro de envíos idempotente con Node.js, Express y PostgreSQL",
+  "main": "server.js",
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "prueba:balanceo": "node pruebas/01-balanceo.mjs",
+    "prueba:continuidad": "node pruebas/02-continuidad.mjs",
+    "prueba:timeout": "node pruebas/03-timeout-reintento.mjs",
+    "prueba:concurrencia": "node pruebas/04-concurrencia.mjs",
+    "prueba:intencionales": "node pruebas/05-intencionales.mjs",
+    "prueba:persistencia": "node pruebas/06-persistencia.mjs",
+    "prueba:rafaga": "node pruebas/07-rafaga-429.mjs",
+    "prueba:rechazos": "node pruebas/08-registro-429.mjs"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "pg": "^8.13.1"
+  }
+}
